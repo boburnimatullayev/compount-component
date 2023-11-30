@@ -1,23 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import Table from "./components/Table";
+import { row, column } from "./components/data";
+import useTable from "./components/usetTable";
+import Pagination from "./components/Pagination";
 
 function App() {
+  const {
+    currentRows,
+    currentPage,
+    totalPages,
+    nextPage,
+    previousPage,
+    setPage,
+  } = useTable(row, 5);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Table>
+        <Table.Thead>
+          <Table.Tr>
+            {column.map((item) => (
+              <Table.Th>{item.name}</Table.Th>
+            ))}
+          </Table.Tr>
+        </Table.Thead>
+        <Table.TBody>
+          {currentRows.map((item) => (
+            <Table.Tr>
+              <Table.Td>{item.id}</Table.Td>
+              <Table.Td>{item.name}</Table.Td>
+              <Table.Td>{item.email}</Table.Td>
+            </Table.Tr>
+          ))}
+        </Table.TBody>
+      </Table>
+
+      <Pagination>
+        <Pagination.Left
+          disabled={currentPage === 1}
+          handleClick={previousPage}
+        />
+        <Pagination.Pages
+          currentPage={currentPage}
+          setPage={setPage}
+          totalPages={totalPages}
+          count={Math.ceil(row.length / 10)}
+          current={currentPage}
+        />
+        <Pagination.Right
+          disabled={currentPage === Math.ceil(row.length / 10)}
+          handleClick={nextPage}
+        />
+      </Pagination>
     </div>
   );
 }
